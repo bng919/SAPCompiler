@@ -5,27 +5,16 @@
  *      Author: benng
  */
 
-#include <iostream>
-#include <fstream>
-#include <map>
-#include <string>
-#include <bitset>
+#include "compiler.h"
 
 int main(){
-	std::ifstream binaryCmds("binaryCommands.txt");
 
-	std::string key;
-	std::string value;
+	Command test("LDA 1001", 2);
 
-	std::map<std::string, std::bitset<4>> bc;
-	//m.insert(std::pair<std::string, int>("LDA", 0b0001));
+	std::cout << test.getMachineCmd();
 
-	while(binaryCmds >> key >> value){
 
-		bc[key] = std::stoi(value, 0, 2);
-	}
 
-	std::cout << bc["LDA"];
 
 	return 0;
 }
