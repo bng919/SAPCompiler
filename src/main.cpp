@@ -9,11 +9,26 @@
 
 int main(){
 
-	Command test("LDA 1001", 2);
+	Command b("LDA 1010", 2);
+	Command c("ADD 0000", 2);
+	Command d("ADD 0001", 2);
+	Command e("ADD 0010", 2);
+	Command f("ADD 0011", 2);
 
-	std::cout << test.getMachineCmd();
+	Program a(b);
+
+	a.addCommand(c);
+	a.addCommand(d);
+	a.addCommand(e);
+	a.addCommand(f);
 
 
+	a.printConversion();
+	a.printMachineCode();
+
+	std::bitset<8> temp = a.getMachineCode();
+
+	std::cout << temp;
 
 
 	return 0;

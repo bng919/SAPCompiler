@@ -58,19 +58,25 @@ private:
 class Program {
 public:
 	Program();
-	Program(Command cmd);
+	Program(const Command& cmd);
 	~Program();
 	Program(const Program& cpy);
 	Program& operator=(const Program& cpy);
 
-	void addCommand(Command cmd);
+	void addCommand(Command& cmd);
 
-	std::string* getAssemblyCode() const;
-	std::bitset<8>* getMachineCode() const;
+	std::string getAssemblyCode() const;
+	std::bitset<8> getMachineCode() const;
+
+	void printAssemblyCode() const;
+	void printMachineCode() const;
+
+	void printConversion() const;
 
 private:
+	int size;
 	std::string* assemblyCode;
-	std::bitset<8>* machineCode();
+	std::bitset<8>* machineCode;
 
 };
 
