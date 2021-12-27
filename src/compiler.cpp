@@ -7,6 +7,21 @@
 
 #include "compiler.h"
 
+void compile() {
+
+}
+
+std::vector<std::string> readFile(std::string fileName) {
+	std::ifstream file(fileName);
+	std::string line;
+	std::vector<std::string> input;
+
+	while(getline(file, line)){
+		input.push_back(line);
+	}
+
+	return input;
+}
 
 std::vector<std::string> stringSplit(const std::string &s, char delim) {
 	std::vector<std::string> vec;
@@ -18,7 +33,7 @@ std::vector<std::string> stringSplit(const std::string &s, char delim) {
 	return vec;
 }
 
-Conversion::Conversion() : binaryCmds("data/binaryCommands.txt") {
+Conversion::Conversion() : binaryCmds("C:\\Users\\benng\\Documents\\Projects\\Active\\SAPCompiler\\data\\binaryCommands.txt") {
 	std::string key;
 	std::string value;
 	while(binaryCmds >> key >> value)
@@ -33,17 +48,18 @@ Conversion::Conversion(std::string binaryCmdPath) : binaryCmds(binaryCmdPath) {
 }
 
 std::string Conversion::lookUp(const std::string A) const {
+	//std::cout << "from lookUp: " << A << "end" << std::endl;
 	return LUT.at(A);
 }
 
-Command::Command(){
+Command::Command() {
 	Conversion();
 	assemblyCmd = "NOP";
 	machineCmd = std::bitset<8>(std::string("00000000"));
 	argBase = 2;
 }
 
-Command::Command(std::string inAssemblyCmd, int argBase){
+Command::Command(std::string inAssemblyCmd, int argBase) {
 	Conversion();
 	assemblyCmd = inAssemblyCmd;
 	machineCmd = AtoM(assemblyCmd);
@@ -72,12 +88,10 @@ std::bitset<8> Command::AtoM(const std::string &A) const{
 }
 
 Program::Program() {
-	size = 1;
+	size = 0;
 	assemblyCode = new std::string[size];
 	machineCode = new std::bitset<8>[size];
 
-	assemblyCode[0] = "NOP 0000";
-	machineCode[0] = std::bitset<8>("00000000");
 }
 
 Program::Program(const Command& cmd){

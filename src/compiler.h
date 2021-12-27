@@ -18,6 +18,10 @@
 #ifndef COMPILER_H_
 #define COMPILER_H_x
 
+void compile();
+
+std::vector<std::string> readFile(std::string fileName);
+
 std::vector<std::string> stringSplit(const std::string &s, char delim);
 
 class Conversion {
