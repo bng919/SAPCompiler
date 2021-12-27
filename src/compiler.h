@@ -15,22 +15,19 @@
 #include <vector>
 #include <sstream>
 
+
 #ifndef COMPILER_H_
 #define COMPILER_H_x
 
-void compile();
-
-std::vector<std::string> readFile(std::string fileName);
-
-std::vector<std::string> stringSplit(const std::string &s, char delim);
 
 class Conversion {
 public:
 	Conversion();
 	Conversion(std::string binaryCmdPath);
 
-	std::string lookUp(const std::string A) const;
+	friend std::ostream& operator<<(std::ostream& os, const Conversion& c);
 
+	std::string lookUp(const std::string A) const;
 
 private:
 
@@ -46,14 +43,10 @@ public:
 	std::string getAssemblyCmd() const;
 	std::bitset<8> getMachineCmd() const;
 
-
-
 private:
-
-	std::bitset<8> AtoM(const std::string &A) const;
-
 	int argBase;
-
+	std::bitset<8> AtoM(const std::string &A) const;
+	std::vector<std::string> stringSplit(const std::string &s, char delim) const;
 	std::string assemblyCmd;
 	std::bitset<8> machineCmd;
 
@@ -72,10 +65,7 @@ public:
 	std::string getAssemblyCode() const;
 	std::bitset<8> getMachineCode() const;
 
-	void printAssemblyCode() const;
-	void printMachineCode() const;
-
-	void printConversion() const;
+	friend std::ostream& operator<<(std::ostream& os, const Program& p);
 
 private:
 	int size;
@@ -83,6 +73,12 @@ private:
 	std::bitset<8>* machineCode;
 
 };
+
+void compile(const std::string& infile, const std::string& outfile, int base, bool display, int verbose);
+
+std::vector<std::string> readFile(const std::string& fileName);
+
+void writeFile(const std::string& fileName, const Program& prog);
 
 
 #endif /* COMPILER_H_ */

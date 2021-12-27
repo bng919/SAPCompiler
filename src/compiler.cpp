@@ -7,32 +7,6 @@
 
 #include "compiler.h"
 
-void compile() {
-
-}
-
-std::vector<std::string> readFile(std::string fileName) {
-	std::ifstream file(fileName);
-	std::string line;
-	std::vector<std::string> input;
-
-	while(getline(file, line)){
-		input.push_back(line);
-	}
-
-	return input;
-}
-
-std::vector<std::string> stringSplit(const std::string &s, char delim) {
-	std::vector<std::string> vec;
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim)) {
-		vec.push_back(item);
-	}
-	return vec;
-}
-
 Conversion::Conversion() : binaryCmds("C:\\Users\\benng\\Documents\\Projects\\Active\\SAPCompiler\\data\\binaryCommands.txt") {
 	std::string key;
 	std::string value;
@@ -59,11 +33,12 @@ Command::Command() {
 	argBase = 2;
 }
 
+//TODO: error check inAssemblyCmd and argBase
 Command::Command(std::string inAssemblyCmd, int argBase) {
 	Conversion();
+	this->argBase = argBase;
 	assemblyCmd = inAssemblyCmd;
 	machineCmd = AtoM(assemblyCmd);
-	this->argBase = argBase;
 }
 
 std::string Command::getAssemblyCmd() const {
@@ -78,13 +53,23 @@ std::bitset<8> Command::AtoM(const std::string &A) const{
 	std::vector<std::string> ASplit = stringSplit(A, ' ');
 	std::string keyword = ASplit[0];
 	std::string keywordBinary = lookUp(keyword);
-	std::string argBinary = ASplit[1];
+	std::string argString = ASplit[1];
 
 	std::bitset<8> M(keywordBinary);
 	M <<= 4; //shift keyword to MSB
-	M |= std::bitset<8>(argBinary); //OR with arg (arg can only be in 4 LSB)
+	M |= std::bitset<8>(std::stoi(argString, nullptr, argBase));
 
 	return M;
+}
+
+std::vector<std::string> Command::stringSplit(const std::string &s, char delim) const {
+	std::vector<std::string> vec;
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		vec.push_back(item);
+	}
+	return vec;
 }
 
 Program::Program() {
@@ -155,32 +140,55 @@ std::bitset<8> Program::getMachineCode() const {
 	return *machineCode;
 }
 
-void Program::printAssemblyCode() const {
-	for(int i = 0; i < size; i++)
-		std::cout << assemblyCode[i] << std::endl;
-}
-
-void Program::printMachineCode() const {
-	for(int i = 0; i < size; i++) {
+std::ostream& operator<<(std::ostream& os, const Program& p) {
+	for(int i = 0; i < p.size; i++) {
+		os << p.assemblyCode[i] << " => ";
 		for(int j = 7; j >= 0; j--) {
-			std::cout << machineCode[i][j];
+			os << p.machineCode[i][j];
 			if(j == 4)
-				std::cout << " ";
+				os << " ";
 
 		}
-		std::cout << std::endl;
+		os << '\n';
 	}
+	return os;
 }
 
-void Program::printConversion() const {
-	for(int i = 0; i < size; i++) {
-		std::cout << assemblyCode[i] << " => ";
-		for(int j = 7; j >= 0; j--) {
-			std::cout << machineCode[i][j];
-			if(j == 4)
-				std::cout << " ";
+void compile(const std::string& infile, const std::string& outfile, int base, bool display, int verbose) {
+	Program prog;
+	std::vector<std::string> inVec = readFile(infile);
 
-		}
-		std::cout << std::endl;
+	for(std::string& cmd : inVec) {
+		Command tmp(cmd, base);
+		prog.addCommand(tmp);
+	}
+
+	if(display)
+		std::cout << prog;
+
+
+	writeFile(outfile, prog);
+
+}
+
+std::vector<std::string> readFile(const std::string& fileName) {
+	std::ifstream file(fileName);
+	std::string line;
+	std::vector<std::string> input;
+
+	while(getline(file, line)){
+		input.push_back(line);
+	}
+
+	return input;
+}
+
+void writeFile(const std::string& fileName, const Program& prog){
+	std::ofstream file(fileName);
+	if(file.is_open()) {
+		file << "---  sapcmp compilation summary  ---\n";
+		file << "---    [INPUT] => [OUTPUT]     ---\n\n";
+		file << prog;
+		file.close();
 	}
 }
