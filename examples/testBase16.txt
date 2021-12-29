@@ -1,0 +1,3 @@
+LDA F
+ADD 3
+STA C
