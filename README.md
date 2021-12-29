@@ -27,8 +27,10 @@ Input file must be formatted as follows
 ```
 where `N` is the maximum number of words the processors memory can store.
 
+Keywords which are valid by default can be found in `SAPCompiler/data/binaryCommands.txt`
+
 ## Examples
-*Example files can be found in SAPCompiler/examples*
+*Example files can be found in `SAPCompiler/examples`*
 
 ### Example 1
 Compile `testBase2-1.txt` to `sapcmp_output.txt` with no display.
