@@ -19,6 +19,11 @@
 #ifndef COMPILER_H_
 #define COMPILER_H_x
 
+//Number of words (instructions) the processor can hold
+const unsigned int SAP_RAM_SIZE = 16;
+const char CMD_ARG_DELIM = ' ';
+const unsigned int ARG_LEN = 3;
+
 
 class Conversion {
 public:
@@ -47,6 +52,7 @@ private:
 	int argBase;
 	std::bitset<8> AtoM(const std::string &A) const;
 	std::vector<std::string> stringSplit(const std::string &s, char delim) const;
+	bool isValidCmdStr(const std::string &str) const;
 	std::string assemblyCmd;
 	std::bitset<8> machineCmd;
 
@@ -68,7 +74,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Program& p);
 
 private:
-	int size;
+	unsigned int size;
 	std::string* assemblyCode;
 	std::bitset<8>* machineCode;
 

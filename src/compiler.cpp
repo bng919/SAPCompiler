@@ -7,9 +7,15 @@
 
 #include "compiler.h"
 
+//TODO: Fix binary Commands path
 Conversion::Conversion() : binaryCmds("C:\\Users\\benng\\Documents\\Projects\\Active\\SAPCompiler\\data\\binaryCommands.txt") {
 	std::string key;
 	std::string value;
+	if(!binaryCmds.is_open()) {
+		//TODO: Throw ConversionException
+		std::cout << "ConversionError - could not open file\n";
+		exit(1);
+	}
 	while(binaryCmds >> key >> value)
 		LUT[key] = value;
 }
@@ -17,12 +23,17 @@ Conversion::Conversion() : binaryCmds("C:\\Users\\benng\\Documents\\Projects\\Ac
 Conversion::Conversion(std::string binaryCmdPath) : binaryCmds(binaryCmdPath) {
 	std::string key;
 	std::string value;
+	if(!binaryCmds.is_open()) {
+		//TODO: Throw ConversionException
+		std::cout << "ConversionError - could not open file\n";
+		exit(1);
+	}
 	while(binaryCmds >> key >> value)
 		LUT[key] = value;
 }
 
 std::string Conversion::lookUp(const std::string A) const {
-	//std::cout << "from lookUp: " << A << "end" << std::endl;
+	//TODO: Try catch .at to handle invalid keyword. Throw InvaildKeywordException
 	return LUT.at(A);
 }
 
@@ -36,6 +47,15 @@ Command::Command() {
 //TODO: error check inAssemblyCmd and argBase
 Command::Command(std::string inAssemblyCmd, int argBase) {
 	Conversion();
+	if(argBase < 2 || argBase > 16) {
+		//TODO: Throw CommandException
+		std::cout << "CommandException - invalid Argument Base, must be between 2 and 16 inclusive";
+		exit(1);
+	}
+	if(isValidCmdStr(inAssemblyCmd)){
+
+	}
+
 	this->argBase = argBase;
 	assemblyCmd = inAssemblyCmd;
 	machineCmd = AtoM(assemblyCmd);
@@ -70,6 +90,17 @@ std::vector<std::string> Command::stringSplit(const std::string &s, char delim) 
 		vec.push_back(item);
 	}
 	return vec;
+}
+
+bool Command::isValidCmdStr(const std::string& str) const {
+	bool rslt = true;
+	int strLen = str.length();
+	if(strLen != 8 || strLen != 3) {
+		rslt = false;
+	} else if(strLen == 8 && str.at(ARG_LEN) != CMD_ARG_DELIM) {
+		rslt = false;
+	}
+	return rslt;
 }
 
 Program::Program() {
@@ -111,6 +142,11 @@ Program& Program::operator=(const Program& copy){
 }
 
 void Program::addCommand(Command& cmd) {
+	if(size+1 > SAP_RAM_SIZE) {
+		//TODO: throw ProgramError
+		std::cout << "Program error - program too large\n";
+		exit(1);
+	}
 	std::string* tempA = new std::string[size+1];
 	std::bitset<8>* tempM = new std::bitset<8>[size+1];
 	for(int i = 0; i < size; i++){
