@@ -14,7 +14,7 @@ sapcmp [--input=IN_FILE] [--output=OUT_FILE] [--base=ARG_BASE] [--display] [--ve
 |  `-o`, `--output [OUT_FILE ` | Output file (default: sapcmp_output.txt) |
 |  `-b`, `--base [ARG_BASE]   ` | Infile argument base (default: 2) |
 |  `-d`, `--display    ` | Display conversion |
-|  `-v`, `--verbose [V_LEVEL]` | Verbose (0,1) (default: 0) |
+|  `-v`, `--verbose [V_LEVEL]` | Verbose (0,1) (default: 0) [Not yet implemented] |
 |  `-h`, `--help       ` | Print usage |
 
 
