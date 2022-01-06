@@ -7,8 +7,7 @@
 
 #include "compiler.h"
 
-//TODO: Fix binary Commands path
-Conversion::Conversion() : binaryCmds("C:\\Users\\benng\\Documents\\Projects\\Active\\SAPCompiler\\data\\binaryCommands.txt") {
+Conversion::Conversion() : binaryCmds("./data/binaryCommands.txt") {
 	std::string key;
 	std::string value;
 	if(!binaryCmds.is_open()) {
