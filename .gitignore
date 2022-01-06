@@ -1,5 +1,6 @@
 *.project
 *.cproject
+sapcmp_output.txt
 
 Debug/
 .settings/
